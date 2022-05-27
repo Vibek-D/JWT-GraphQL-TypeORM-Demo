@@ -14,6 +14,7 @@ import { createAccessToken, createRefreshToken } from "./auth";
 
 (async () => {
   const app = express();
+  //middleware for the CORS
   app.use(
     cors({
       origin: "http://localhost:3000",
@@ -22,7 +23,9 @@ import { createAccessToken, createRefreshToken } from "./auth";
   );
   app.use(cookieParser());
   app.get("/", (_req: any, res: any) => res.send("Server pinged"));
+  //refresh tokens are always set and get to/from the res.cookie
   app.post("/refreshToken", async (req: any, res: any) => {
+  //using this route we are basically requesting for a new access token, when the access token expires and remember always that the access token can be renewed only using the ref token
     const token = req.cookies.jid;
     if (!token) {
       return res.send({ ok: false, accessToken: "" });
@@ -47,8 +50,8 @@ import { createAccessToken, createRefreshToken } from "./auth";
       return res.send({ ok: false, accessToken: "" });
     }
 
+    //creating and setting the new refresh token in the res.cookie and sending a new access token in the response
     sendRefreshToken(res, createRefreshToken(user));
-
     return res.send({ ok: true, accessToken: createAccessToken(user) });
   });
 

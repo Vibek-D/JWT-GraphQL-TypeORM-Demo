@@ -40,6 +40,7 @@ export class UserResolver {
   @UseMiddleware(isAuth)
   //here the middleware has attached the payload after authenticating it and we are taking the userId from it, check isAuth line 22
   bye(@Ctx() { payload }: MyContext) {
+  //in the @Ctx() { payload } we are getting the payload that the middleware returned to the next resolver
     console.log(payload);
     return `Your user id is: ${payload!.userId}`;
   }
